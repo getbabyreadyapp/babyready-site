@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BabyReady: free 3-day emergency kit builder</title>
+<meta name="description" content="Answer 3 quick questions and get a 3-day emergency kit list with amounts, made for your household and your baby.">
+<meta name="theme-color" content="#1F2B47">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/config.js"></script>
+<script src="assets/pixel.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="BabyReady home">
+      <svg width="28" height="28" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#1F2B47"/><circle cx="18" cy="18" r="9" fill="#F5C451"/><circle cx="22" cy="15" r="8" fill="#1F2B47"/></svg>
+      <span>BabyReady</span>
+    </a>
+    <span class="topbar-tag">Free kit builder</span>
+  </header>
+
+  <div id="draft-banner" class="draft-banner no-print" hidden>DRAFT amounts, not yet reviewed. Do not share.</div>
+
+  <!-- 1 · Start -->
+  <main id="view-start" class="view" data-view="start">
+    <div class="stack-12" style="margin-top: 14px">
+      <span class="pill">Free · 2 minutes · No app needed</span>
+      <h1 class="h1">Build your family's 3‑day emergency kit</h1>
+      <p class="lede">Answer 3 quick questions. Get a list with amounts, made for your household and your baby.</p>
+    </div>
+    <form id="zip-form" class="card" novalidate>
+      <label for="zip" class="label">Your ZIP code</label>
+      <input id="zip" class="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" aria-describedby="zip-hint">
+      <span id="zip-hint" class="hint">US only for now.</span>
+      <span id="zip-error" class="error-text" role="alert" hidden>Enter a 5-digit US ZIP code.</span>
+    </form>
+    <button type="submit" form="zip-form" class="btn">Build my kit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="check-list">
+      <div class="check-row"><span class="check-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Amounts, not just items.</b> Gallons, diapers, formula.</span></div>
+      <div class="check-row"><span class="check-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Made for how your baby eats.</b> Breast milk, formula or solids.</span></div>
+      <div class="check-row"><span class="check-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span id="rd-claim"><b>Made by a Registered Dietitian</b> with 10 years of NICU and pediatric experience.</span></div>
+    </div>
+    <p class="fine push-bottom">Built on FEMA, CDC and AAP guidance. Your answers stay in your browser. Not medical advice. <a href="privacy.html">Privacy policy</a></p>
+  </main>
+
+  <!-- 2 · Who's at home -->
+  <main id="view-home" class="view" data-view="home" hidden>
+    <div class="stepbar" data-step="1"></div>
+    <div class="stack-8">
+      <span class="eyebrow">Your household</span>
+      <h1 class="h1 step">Who's at home?</h1>
+      <p class="lede" style="font-size:15px">Count everyone who'd be with you for 3 days.</p>
+    </div>
+    <div id="household" class="card tight"></div>
+    <button type="button" class="btn push-bottom" data-next>Continue <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  </main>
+
+  <!-- 3 · How the baby eats -->
+  <main id="view-baby" class="view" data-view="baby" hidden>
+    <div class="stepbar" data-step="2"></div>
+    <div class="stack-8">
+      <span class="eyebrow">Your baby</span>
+      <h1 class="h1 step">What does your baby eat?</h1>
+      <p class="lede" style="font-size:15px">Pick all that apply. Choices change with age.</p>
+    </div>
+    <fieldset id="feeds" class="chips"><legend>What your baby eats</legend></fieldset>
+    <div id="feed-extras" class="card" hidden></div>
+    <div id="shares" class="card"></div>
+    <div id="feed-tips"></div>
+    <button type="button" class="btn push-bottom" data-next>See my kit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  </main>
+
+  <!-- 4 · Preview + email -->
+  <main id="view-preview" class="view" data-view="preview" hidden>
+    <div class="stepbar" data-step="3"></div>
+    <div class="card dark"><span class="title">Your 3-day kit</span><span class="sub" data-summary></span></div>
+    <div id="preview-list"></div>
+    <form id="gate" class="card strong gate" novalidate>
+      <span class="gate-title">Get your full list, free</span>
+      <span style="font-size:14px;color:var(--ink-2)">Plus our guide, <b>Baby feeding in an emergency</b>, from a Registered Dietitian.</span>
+      <label for="email" style="font-size:14px;font-weight:600">Email</label>
+      <input id="email" name="email_address" type="email" autocomplete="email" placeholder="you@example.com" required>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <div id="gate-msg" class="form-msg err" role="alert" hidden></div>
+      <button type="submit" class="btn">Show my full list <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <span class="fine">You'll also join the waitlist for the BabyReady app. Unsubscribe anytime. Only your email is sent; your answers stay on this device. <a href="privacy.html">Privacy policy</a></span>
+    </form>
+    <div class="stack-8" data-teaser></div>
+    <p class="fine">Not medical advice. Ask your pediatrician about medicine doses.</p>
+  </main>
+
+  <!-- 5 · Full list + thank-you -->
+  <main id="view-list" class="view" data-view="list" hidden>
+    <div class="card dark"><span class="title">Your 3-day kit</span><span class="sub" data-summary></span></div>
+    <section class="card thanks no-print" aria-labelledby="thanks-h">
+      <div class="ok" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F2B47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h2 id="thanks-h">One more step: confirm your email</h2>
+      <p>We just sent you an email. Tap <b>Confirm</b> in it to get your guide, <b>Baby feeding in an emergency</b>, and join the app waitlist. If it isn't there in five minutes, look in Promotions or Spam.</p>
+      <h3>Three things to do this week</h3>
+      <ol>
+        <li>Print this list and tape it inside the lid of your kit bin.</li>
+        <li>Set a phone reminder for the 1st of every month: check formula and baby food dates.</li>
+        <li>Shop one section at a time. Water and feeding first.</li>
+      </ol>
+    </section>
+    <div class="actions no-print">
+      <button type="button" class="btn small" id="print-btn">Print or save PDF</button>
+      <span class="sent">Check your inbox to confirm</span>
+    </div>
+    <div id="full-list"></div>
+    <div class="stack-8 no-print" data-teaser></div>
+    <div class="note-dark no-print"><b>Once you confirm, you're on the waitlist.</b> We'll email you when the BabyReady app is ready to try.</div>
+    <p class="no-print" style="margin:0;font-size:15px;color:var(--ink-2)">Know someone expecting? <button type="button" id="share-btn" style="background:none;border:0;padding:0;font-weight:700;text-decoration:underline;cursor:pointer;color:var(--navy)">Send them this page</button></p>
+    <div class="sources" id="sources"></div>
+    <p class="fine" id="list-footer">Built on FEMA, CDC and AAP guidance. Not medical advice. Ask your pediatrician about your child's needs and any medicine doses.</p>
+    <p class="fine no-print"><a href="#" id="start-over">Start over</a> · <a href="privacy.html">Privacy policy</a></p>
+  </main>
+</div>
+<script src="assets/rules-data.js"></script>
+<script src="assets/rules.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

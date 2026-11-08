@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BabyReady privacy policy</title>
+<meta name="theme-color" content="#1F2B47">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/config.js"></script>
+<script src="assets/pixel.js"></script>
+</head>
+<body>
+<div class="legal">
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="BabyReady kit builder">
+      <svg width="28" height="28" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#1F2B47"/><circle cx="18" cy="18" r="9" fill="#F5C451"/><circle cx="22" cy="15" r="8" fill="#1F2B47"/></svg>
+      <span>BabyReady</span>
+    </a>
+  </header>
+
+  <h1>Privacy policy</h1>
+  <p class="fine">Last updated <span data-cfg="policyDate"></span></p>
+
+  <p>BabyReady makes a free emergency-kit builder for families. This policy explains what we collect on this website and what we do with it. In short: your answers stay on your device, and the only thing we collect is the email address you choose to give us.</p>
+
+  <h2>Your kit answers stay on your device</h2>
+  <p>Your ZIP code, who lives in your home, your baby's age and how your baby eats are used only inside your web browser to build your list. They are saved in your browser's local storage so your list is still there if you come back. We never receive them, and we don't send them to Kit, Meta or anyone else. To erase them, choose "Start over" on your list or clear this site's data in your browser.</p>
+
+  <h2>Your email address</h2>
+  <p>When you ask for your full list, you give us your email address. We use it to send you the guide <i>Baby feeding in an emergency</i>, occasional BabyReady emails, and news about the BabyReady app's waitlist. Every email has an unsubscribe link.</p>
+  <p>Our email service, Kit (kit.com), stores your address and the date you signed up on our behalf. Kit's own privacy policy is at <a href="https://kit.com/privacy">kit.com/privacy</a>.</p>
+
+  <h2>Meta pixel</h2>
+  <p>We use the Meta pixel to see how well our Facebook and Instagram ads work. It tells Meta when this site is visited and when someone signs up. Meta may set cookies and link this to your Meta account under <a href="https://www.facebook.com/privacy/policy/">Meta's privacy policy</a>. We don't send Meta your email address or any of your kit answers. You can control ad tracking in your <a href="https://www.facebook.com/adpreferences">Meta ad preferences</a> and in your browser or phone settings.</p>
+
+  <h2>Other services</h2>
+  <p>This site is hosted on GitHub Pages and loads fonts from Google Fonts. Like any web server, they may log your IP address and browser type to deliver the page.</p>
+
+  <h2>What we don't do</h2>
+  <ul>
+    <li>We don't sell or rent your personal information.</li>
+    <li>We don't share your email address except with Kit, which sends our emails.</li>
+    <li>This site is meant for parents and caregivers, not for children under 13, and we don't knowingly collect children's information.</li>
+  </ul>
+
+  <h2>Your choices and rights</h2>
+  <p>You can unsubscribe at any time from any email. You can ask us to see, correct or delete the information we hold about you (your email address and sign-up date). California residents have these rights under the California Consumer Privacy Act, and we won't treat you differently for using them. Email us and we'll reply within 30 days.</p>
+
+  <h2>Not medical advice</h2>
+  <p>The kit list is general preparedness information based on FEMA, CDC, AAP, EPA and FDA guidance. It is not medical advice. Ask your pediatrician about your child's needs and any medicine doses.</p>
+
+  <h2>Changes</h2>
+  <p>If we change this policy, we'll update the date at the top of this page.</p>
+
+  <h2>Contact</h2>
+  <p>Email: <span data-cfg="contactEmail"></span><br>Mail: BabyReady, <span data-cfg="mailingAddress"></span></p>
+
+  <p class="fine" style="margin-top:32px"><a href="./">Back to the kit builder</a></p>
+</div>
+<script>
+  (function () {
+    var c = window.BR_CONFIG || {};
+    var ph = { contactEmail: "[CONTACT EMAIL]", mailingAddress: "[P.O. BOX, MARINA, CA]", policyDate: "[DATE]" };
+    document.querySelectorAll("[data-cfg]").forEach(function (el) {
+      var k = el.getAttribute("data-cfg"), v = c[k];
+      if (v) {
+        if (k === "contactEmail") { var a = document.createElement("a"); a.href = "mailto:" + v; a.textContent = v; el.appendChild(a); }
+        else el.textContent = v;
+      } else { el.textContent = ph[k]; el.className = "placeholder"; }
+    });
+  })();
+</script>
+</body>
+</html>
