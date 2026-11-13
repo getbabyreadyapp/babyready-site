@@ -484,7 +484,9 @@
     if (t.id === "share-btn") { shareSite(); return; }
     if (t.id === "start-over") {
       e.preventDefault();
-      S = clone(DEFAULTS); save(); go("start");
+      S = clone(DEFAULTS); save();
+      UTM = {}; try { localStorage.removeItem(UTM_KEY); } catch (err) {}
+      go("start");
     }
   });
 

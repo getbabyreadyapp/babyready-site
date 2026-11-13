@@ -73,7 +73,8 @@
     FP9: 3.00, FP10: 2.50, FP11: 0.75, FP12: 0.50, FP14: 4.00, FP16: 0.90, FP17: 1.40, FP18: 0.60 };
   const CLASSIC_SERVING_PRICE = { FP4: 0.25, FP6: 1.30, FP16: 0.45, FP2: 0.90 };
 
-  // Store sections (item 37), in the order most grocery stores lay them out.
+  // Store sections (item 37), in the order most grocery stores lay them out. Pets (Josh, Nov 13)
+  // sits next to paper and cleaning, where most stores keep the pet aisle; it shows only with pets.
   const SECTIONS = [
     { id: 1, name: "Produce" },
     { id: 2, name: "Canned goods" },
@@ -85,6 +86,7 @@
     { id: 8, name: "Baby" },
     { id: 9, name: "Health and pharmacy" },
     { id: 10, name: "Paper and cleaning" },
+    { id: 14, name: "Pets" },
     { id: 11, name: "Personal care" },
     { id: 12, name: "Hardware, outdoors and electronics" },
     { id: 13, name: "Do at home", short: "plans" },
@@ -315,7 +317,7 @@
       note: (c, x) => "Cups and spoons: 3 of each per person a day" + (x.solids > 0 ? ", 12 per baby a day" : "") + ". For when you can't wash with safe water" },
     N1: { s: 10, qty: () => "1 kit", note: () => "Line the toilet or a bucket with a bag. Add a scoop of cat litter after each use; it soaks up liquid and cuts the smell. Tie the bag and store it until trash pickup is back" },
     D4: { s: 10, when: (c, x) => x.little > 0, qty: () => "1 box" },
-    E24: { s: 10, when: (c, x) => x.pets > 0, qty: (c) => `${c.days} days`, note: () => "3 days of their current food, using the feeding chart on the bag" },
+    E24: { s: 14, when: (c, x) => x.pets > 0, qty: (c) => `${c.days} days`, note: () => "3 days of their current food, using the feeding chart on the bag" },
 
     // 11 Personal care
     N46: { s: 11, when: (c, x) => x.ones > 0, qty: (c, x) => n(x.ones, "pack"), note: () => "1 pack per person for 3 days" },
