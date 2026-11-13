@@ -17,9 +17,9 @@
     adults: [{ sex: "f" }, { sex: "m" }], teens: [], kids: [], toddlers: [],
     babies: 1, ageMonths: 6, babyLb: "", babySize: "",
     dogs: [], cats: 0,
-    pump: false, pads: false,
+    pump: false, pumpPlan: "both", pads: false,
     feeds: { breast: true }, shares: { breast: 100 },
-    formulaForm: "rtf", backupForm: "rtf", bottleOz: 8, kcalPerG: 5.1, canGrams: 584, kcalPerPouch: 70,
+    formulaForm: "rtf", backupForm: "rtf", bottleOz: 8, canGrams: 584, kcalPerPouch: 70,
     allergy: "", allergies: {}, classic: false,
     unlocked: false,
   };
@@ -127,9 +127,10 @@
     return {
       days: 3, adults: S.adults, teens: S.teens, kids: S.kids, toddlers: S.toddlers,
       babies: S.babies, ageMonths: S.ageMonths, babyLb: Number(S.babyLb) || 0, babySize: S.babySize,
-      pump: !!(S.pump && S.feeds.breast), pads: !!(S.pads && S.feeds.breast),
+      pump: !!(S.pump && S.feeds.breast && S.pumpPlan !== "breast"), pads: !!(S.pads && S.feeds.breast),
       formulaForm: S.formulaForm, backupForm: S.backupForm,
-      bottleOz: Number(S.bottleOz) || 8, kcalPerG: Number(S.kcalPerG) || 5.1, canGrams: Number(S.canGrams) || 584,
+      // Powder energy: one average for standard formula (R.FEED.kcalPerG); parents are never asked for it.
+      bottleOz: Number(S.bottleOz) || 8, canGrams: Number(S.canGrams) || 584,
       kcalPerPouch: Number(S.kcalPerPouch) || 70,
       dogs: S.dogs, cats: S.cats, share,
       allergy: S.allergy, allergies: S.allergies, classic: S.classic,
@@ -292,15 +293,26 @@
       <span id="lb-hint" class="hint">We use it to work out your baby's calorie needs for the amounts.</span>
       <span id="lb-error" class="error-text" role="alert" hidden>Enter your baby's weight in pounds (4 to 40).</span></div>`;
     if (S.feeds.breast) {
-      html += `<label class="toggle-row"><input type="checkbox" id="pump" ${S.pump ? "checked" : ""}> <span>I pump</span></label>
+      html += `<label class="toggle-row"><input type="checkbox" id="pump" ${S.pump ? "checked" : ""}> <span>I pump</span></label>`;
+      if (S.pump) {
+        const pp = (v, l) => `<label><input type="radio" name="pumpPlan" value="${v}" ${S.pumpPlan === v ? "checked" : ""}><span>${l}</span></label>`;
+        html += `<span class="label" id="pumpPlan-q">In an emergency, would you keep pumping or breastfeed directly?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="pumpPlan-q">${pp("pump", "Keep pumping")}${pp("breast", "Breastfeed")}${pp("both", "Both")}</div>
+          <span class="hint">Breastfeeding directly needs no bottles, washing or power. If you pump, we add a manual pump, bags and a cooler.</span>`;
+      }
+      html += `
         <label class="toggle-row"><input type="checkbox" id="pads" ${S.pads ? "checked" : ""}> <span>I use nursing pads</span></label>`;
     }
     const form = (id, cur) => `<div class="seg" role="radiogroup" aria-labelledby="${id}-q">
         <label><input type="radio" name="${id}" value="rtf" ${cur !== "powder" ? "checked" : ""}><span>Ready-to-feed</span></label>
         <label><input type="radio" name="${id}" value="powder" ${cur === "powder" ? "checked" : ""}><span>Powder</span></label></div>`;
-    const powderFields = `<div class="row-2"><label class="stack-4"><span class="hint">Calories per gram (label)</span><input class="num-input" data-num="kcalPerG" inputmode="decimal" maxlength="4" value="${esc(S.kcalPerG)}"></label>
-        <label class="stack-4"><span class="hint">Grams per can</span><input class="num-input" data-num="canGrams" inputmode="numeric" maxlength="4" value="${esc(S.canGrams)}"></label></div>`;
-    const rtfFields = `<label class="stack-4"><span class="hint">Ounces per bottle</span><input class="num-input" data-num="bottleOz" inputmode="decimal" maxlength="4" value="${esc(S.bottleOz)}"></label>`;
+    // Plain label choices, no math for the parent: can size (net weight on the front) and bottle size.
+    const CANS = [[352, "Small, about 12 oz"], [584, "Medium, about 20 oz"], [873, "Large, about 30 oz"]];
+    const BOTTLES = [[2, "2 oz (small nursers)"], [8, "8 oz"], [32, "32 oz (large bottle)"]];
+    const pick = (id, label, list, cur) => `<label class="stack-4"><span class="hint">${label}</span><select class="num-input" data-num="${id}">${list.map(([v, l]) => opt(v, l, cur)).join("")}</select></label>`;
+    const powderFields = pick("canGrams", "Can size (the net weight on the front)", CANS, S.canGrams) +
+      `<span class="hint">Standard formula. If your baby uses a specialty formula, follow your doctor's mixing directions.</span>`;
+    const rtfFields = pick("bottleOz", "Bottle size", BOTTLES, S.bottleOz);
     if (c.share.formula > 0) {
       html += `<span class="label" id="formulaForm-q">Ready-to-feed or powder?</span>${form("formulaForm", S.formulaForm)}` +
         (S.formulaForm === "powder" ? powderFields : rtfFields);
@@ -488,6 +500,7 @@
     const el = e.target;
     if (el.id === "age") { S.ageMonths = Number(el.value); setStartingShares(); save(); }
     if (el.id === "baby-size") { S.babySize = el.value; save(); }
+    if (el.tagName === "SELECT" && el.dataset.num) { S[el.dataset.num] = Number(el.value); save(); }
     if (el.dataset.person) {
       const p = S[el.dataset.person][Number(el.dataset.i)];
       const f = el.dataset.f;
@@ -501,7 +514,8 @@
     if (el.name === "allergy") { S.allergy = el.value; save(); renderDiet(); }
     if (el.dataset.allergy) { S.allergies[el.dataset.allergy] = el.checked; save(); }
     if (el.id === "classic") { S.classic = el.checked; save(); }
-    if (el.id === "pump") { S.pump = el.checked; save(); }
+    if (el.id === "pump") { S.pump = el.checked; save(); renderFeedExtras(); }
+    if (el.name === "pumpPlan") { S.pumpPlan = el.value; save(); }
     if (el.id === "pads") { S.pads = el.checked; save(); }
     if (el.name === "formulaForm" || el.name === "backupForm") { S[el.name] = el.value; save(); renderFeedExtras(); }
     if (el.closest("#feeds")) {

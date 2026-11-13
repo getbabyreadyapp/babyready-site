@@ -280,3 +280,4 @@ button, input, select { font: inherit; color: inherit; }
 .cost-box { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; background: var(--ground); font-size: 14px; }
 .cost-box small { font-size: 12px; color: var(--ink-3); }
 .sources small { display: block; margin-top: 6px; font-size: 12px; color: var(--ink-3); }
+select.num-input { width: auto; min-width: 220px; max-width: 100%; font-size: 16px; }

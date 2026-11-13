@@ -31,7 +31,7 @@
   // Baby feeding tab, "Amount rules" (signed off Nov 8)
   const FEED = {
     kcalPerOz: 20,        // Label: standard formula
-    kcalPerG: 5.1,        // Practical guidance; parent can enter the label value
+    kcalPerG: 5.1,        // Practical guidance: average for standard powder; never asked of parents (Josh, Nov 13)
     bottleOz: 8,          // Practical guidance; parent can change it
     canGrams: 584,        // Label: 20.6 oz tub
     kcalPerPouch: 70,     // Practical guidance; parent can enter the label value
@@ -111,7 +111,7 @@
     const backup = breastfeeding && !formula;
     const backupOz = backup ? (E / FEED.kcalPerOz) * c.share.breast * FEED.backupDays * c.babies : 0;
     const formulaOz = ozDay * c.babies * c.days;
-    const kcalPerG = c.kcalPerG || FEED.kcalPerG, canGrams = c.canGrams || FEED.canGrams, bottleOz = c.bottleOz || FEED.bottleOz;
+    const kcalPerG = FEED.kcalPerG, canGrams = c.canGrams || FEED.canGrams, bottleOz = c.bottleOz || FEED.bottleOz;
     const powder = (formula && c.formulaForm === "powder") || (backup && c.backupForm === "powder");
     const powderOz = formula ? (c.formulaForm === "powder" ? formulaOz : 0) : (backup && c.backupForm === "powder" ? backupOz : 0);
     const gramsDay = formula && c.formulaForm === "powder" ? ozDay * c.babies * FEED.kcalPerOz / kcalPerG : 0;
