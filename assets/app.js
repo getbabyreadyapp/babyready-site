@@ -5,7 +5,6 @@
   "use strict";
   const CFG = window.BR_CONFIG;
   const R = window.BR_RULES;
-  const TZ = window.BR_TZ;
   const STORE_KEY = "babyready-kit-v2";
   const UTM_KEY = "babyready-utm";
   const $ = (s, el = document) => el.querySelector(s);
@@ -152,9 +151,6 @@
     return bits.join(" · ");
   }
   function ageLabel(m) { return m === 0 ? "under 1 month" : m === 1 ? "1 month" : `${m} months`; }
-  function helpline() {
-    return `National Women's Health and Breastfeeding Helpline, 1-800-994-9662, weekdays ${TZ ? TZ.hoursFor(S.zip, 9, 18) : "9 am to 6 pm Eastern"}.`;
-  }
 
   // ---------- render ----------
   const ICON_CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="tick"><path d="M20 6 9 17l-5-5"/></svg>';
@@ -352,7 +348,6 @@
     if (S.feeds.breast) {
       tips += `<div class="tip"><b class="tag">Practical guidance</b>Keep breastfeeding in an emergency. We'll add backup formula, just in case.</div>`;
       tips += `<div class="tip"><b class="tag">Pro tip</b>Keep a couple of ice packs in your freezer and an insulated lunch bag with your kit. If the power goes out, pumped milk stays safe up to 24 hours (CDC).</div>`;
-      tips += `<div class="tip"><b class="tag">Help</b>${esc(helpline())}</div>`;
     }
     if (S.feeds.formula) tips += `<div class="tip"><b class="tag">Formula safety</b>Use your baby's usual formula. Never water formula down or make it at home.</div>`;
     if (S.feeds.formula || S.feeds.breast) tips += `<div class="tip"><b class="tag">Pro tip</b>One small drop of dish soap is enough to wash a bottle.</div>`;
@@ -417,9 +412,8 @@
   }
 
   function renderList() {
-    const { sections, food, x } = buildList();
-    const help = x.breastfeeding ? `<div class="tip"><b class="tag">Help</b>${esc(helpline())}</div>` : "";
-    $("#full-list").innerHTML = menuHTML(food) + help +
+    const { sections, food } = buildList();
+    $("#full-list").innerHTML = menuHTML(food) +
       `<div class="kit">${sections.map((sec) => `<h2>${esc(sec.name)}</h2>${sec.items.map(itemHTML).join("")}`).join("")}</div>`;
     const urls = [...new Set(sections.flatMap((s) => s.items.flatMap((i) => i.urls)))];
     const named = [...new Map(urls.map((u) => [R.sourceName(u), u])).entries()].sort((a, b) => a[0].localeCompare(b[0]));
