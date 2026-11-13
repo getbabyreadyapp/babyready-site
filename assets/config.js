@@ -11,12 +11,12 @@ window.BR_CONFIG = {
   // No household answers, ZIP or email are ever sent to Meta.
   metaPixelId: "1472556328304011",
 
-  // Keep false until Josh signs off the amounts in assets/rules.js.
+  // Josh signed off every Lite row Nov 8 to 9, 2026 (rules/claude-code-changes.md, item 39).
   // While false: no "Reviewed by Joshua West, RD" line, and a DRAFT banner shows.
-  rdSignedOff: false,
+  rdSignedOff: true,
 
   // Privacy policy details.
   contactEmail: "getbabyreadyapp@gmail.com",
-  mailingAddress: "",                 // TODO(Josh): P.O. box, Marina, CA
-  policyDate: "November 8, 2026",
+  mailingAddress: "BabyReady, P.O. Box 1064, Marina, CA 93933",
+  policyDate: "November 13, 2026",
 };

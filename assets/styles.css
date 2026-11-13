@@ -240,3 +240,43 @@ button, input, select { font: inherit; color: inherit; }
   .item .what small { font-size: 10.5pt; }
   .sources a::after { content: " (" attr(href) ")"; }
 }
+
+/* Household: one row per person (sex, age band, diapers, dog size) */
+.subrow.person { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 6px 0 10px; }
+.subrow.person .who-n { font-size: 13px; font-weight: 600; color: var(--ink-3); min-width: 64px; }
+.mini select { font: inherit; font-size: 14px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--navy); max-width: 100%; }
+.mini.check { font-size: 14px; display: inline-flex; gap: 6px; align-items: center; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sub-hint { display: block; padding: 0 0 8px; }
+.seg { display: flex; gap: 8px; flex-wrap: wrap; }
+.seg label { flex: 1 1 auto; }
+.seg input { position: absolute; opacity: 0; }
+.seg span { display: block; text-align: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-weight: 600; font-size: 15px; background: var(--card); cursor: pointer; }
+.seg input:checked + span { background: var(--navy); color: #fff; border-color: var(--navy); }
+.seg input:focus-visible + span { outline: 3px solid var(--navy); outline-offset: 2px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stack-4 { display: flex; flex-direction: column; gap: 4px; }
+#feed-extras, #diet { display: flex; flex-direction: column; gap: 10px; }
+
+/* Feeding: milk vs. foods by age */
+.mix-graph { margin: 6px 0 0; display: flex; flex-direction: column; gap: 6px; }
+.mix-graph figcaption { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+.mix-graph .legend { font-size: 12px; color: var(--ink-3); display: inline-flex; gap: 6px; align-items: center; }
+.mix-graph .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.mix-graph .milk { background: var(--navy); }
+.mix-graph .foods { background: var(--sun); }
+.mix-row { display: grid; grid-template-columns: 64px 1fr 44px; gap: 8px; align-items: center; font-size: 13px; color: var(--ink-3); }
+.mix-row .bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--line-soft); }
+.mix-row .bar span { display: block; height: 100%; }
+.mix-row .pct { text-align: right; font-variant-numeric: tabular-nums; }
+.mix-row.now { color: var(--navy); font-weight: 700; }
+.mix-row.now .bar { outline: 2px solid var(--navy); outline-offset: 1px; }
+
+/* List: 3-day menu and cost */
+.menu-card h2 { margin: 0; font-family: var(--display); font-size: 20px; }
+.menu-card .meal { display: grid; grid-template-columns: 82px 1fr auto; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line-soft); font-size: 14px; }
+.menu-card .meal span { color: var(--ink-2); }
+.menu-card .meal .cost { font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.cost-box { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; background: var(--ground); font-size: 14px; }
+.cost-box small { font-size: 12px; color: var(--ink-3); }
+.sources small { display: block; margin-top: 6px; font-size: 12px; color: var(--ink-3); }
