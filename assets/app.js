@@ -37,6 +37,67 @@
     try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {}
   }
 
+  // ---------- kit link (item 31): the answers, no email, packed into #k=... ----------
+  // Short keys keep the link well under 1,000 characters. Rebuilds the list on any device.
+  const FEED_KEYS = { breast: "b", formula: "f", puree: "p", finger: "s", table: "t" };
+  const SIZE_OK = /^(N|[1-7])?$/;
+  function packAnswers() {
+    const k = {
+      a: S.adults.map((p) => (p.sex === "m" ? "m" : "f")).join(""),
+      t: S.teens.map((p) => (p.sex === "m" ? "m" : "f")).join(""),
+      i: S.kids.map((p) => (p.band === "9-12" ? (p.sex === "m" ? "b" : "g") : "4")).join(""),
+      d: S.toddlers.map((t) => [t.age, t.diaper === "pullups" ? "u" : t.diaper === "potty" ? "p" : "d", t.size || "", t.milk === false ? 0 : 1]),
+      b: S.babies, m: S.ageMonths, w: Number(S.babyLb) || 0, z: S.babySize || "",
+      g: S.dogs.map((dg) => dg.size).join(""), c: S.cats,
+      f: Object.fromEntries(Object.entries(FEED_KEYS).filter(([id]) => S.feeds[id]).map(([id, c]) => [c, S.shares[id] || 0])),
+      u: S.pump ? { pump: 1, breast: 2, both: 3 }[S.pumpPlan] || 3 : 0, n: S.pads ? 1 : 0,
+      x: (S.formulaForm === "powder" ? "p" : "r") + (S.backupForm === "powder" ? "p" : "r"),
+      o: Number(S.bottleOz) || 8, q: Number(S.canGrams) || 584, v: Number(S.kcalPerPouch) || 70,
+      l: S.allergy === "yes" ? "y" : S.allergy === "no" ? "n" : "",
+      y: Object.keys(S.allergies || {}).filter((a) => S.allergies[a]).join("."), e: S.classic ? 1 : 0,
+    };
+    const bytes = new TextEncoder().encode(JSON.stringify(k));
+    let bin = ""; bytes.forEach((b) => (bin += String.fromCharCode(b)));
+    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function unpackAnswers(code) {
+    const b64 = code.replace(/-/g, "+").replace(/_/g, "/");
+    const bin = atob(b64 + "===".slice((b64.length + 3) % 4));
+    const k = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (ch) => ch.charCodeAt(0))));
+    const int = (v, lo, hi, def) => { v = Math.round(Number(v)); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
+    const chars = (v, ok) => String(v || "").split("").filter((ch) => ok.includes(ch)).slice(0, 12);
+    const out = clone(DEFAULTS);
+    out.adults = chars(k.a, "fm").map((sx) => ({ sex: sx }));
+    out.teens = chars(k.t, "fm").map((sx) => ({ sex: sx }));
+    out.kids = chars(k.i, "4gb").map((ch) => (ch === "4" ? { band: "4-8", sex: "f" } : { band: "9-12", sex: ch === "b" ? "m" : "f" }));
+    out.toddlers = (Array.isArray(k.d) ? k.d : []).slice(0, 12).map((t) => ({
+      age: int(t[0], 1, 3, 1), diaper: { u: "pullups", p: "potty" }[t[1]] || "diapers",
+      size: SIZE_OK.test(String(t[2] || "")) ? String(t[2] || "") : "", milk: t[3] !== 0 }));
+    out.babies = int(k.b, 0, 12, 0); out.ageMonths = int(k.m, 0, 11, 6);
+    out.babyLb = Number(k.w) >= 4 && Number(k.w) <= 40 ? String(k.w) : "";
+    out.babySize = SIZE_OK.test(String(k.z || "")) ? String(k.z || "") : "";
+    out.dogs = chars(k.g, "sml").map((sz) => ({ size: sz })); out.cats = int(k.c, 0, 12, 0);
+    out.feeds = {}; out.shares = {};
+    Object.entries(FEED_KEYS).forEach(([id, ch]) => { if (k.f && ch in k.f) { out.feeds[id] = true; out.shares[id] = int(k.f[ch], 0, 100, 0); } });
+    out.pump = int(k.u, 0, 3, 0) > 0; out.pumpPlan = ["both", "pump", "breast", "both"][int(k.u, 0, 3, 0)]; out.pads = k.n === 1;
+    out.formulaForm = String(k.x || "")[0] === "p" ? "powder" : "rtf"; out.backupForm = String(k.x || "")[1] === "p" ? "powder" : "rtf";
+    out.bottleOz = [2, 8, 32].includes(k.o) ? k.o : 8; out.canGrams = [352, 584, 873].includes(k.q) ? k.q : 584;
+    out.kcalPerPouch = int(k.v, 20, 200, 70);
+    out.allergy = k.l === "y" ? "yes" : k.l === "n" ? "no" : "";
+    out.allergies = {}; String(k.y || "").split(".").forEach((a) => { if (["top9", "corn", "oats", "seeds", "legumes", "celiac", "severe"].includes(a)) out.allergies[a] = true; });
+    out.classic = k.e === 1;
+    out.unlocked = true; // they signed up before; the list opens with no email step
+    return out;
+  }
+  function kitLink() { return `${location.origin}${location.pathname}?utm_source=kit#k=${packAnswers()}`; }
+  // Opening a kit link: load the answers and go straight to the full list.
+  (function openKitLink() {
+    const m = /^#k=([A-Za-z0-9_-]+)$/.exec(location.hash);
+    if (!m) return;
+    try { S = unpackAnswers(m[1]); save(); history.replaceState({ view: "list" }, "", location.pathname + location.search + "#list"); }
+    catch (e) { history.replaceState({}, "", location.pathname + location.search); }
+  })();
+
   // ---------- ad tracking (item 40): remember which ad brought the visitor ----------
   let UTM = {};
   try { UTM = JSON.parse(localStorage.getItem(UTM_KEY) || "{}") || {}; } catch (e) {}
@@ -156,6 +217,7 @@
 
   function render(view) {
     $$("[data-summary]").forEach((el) => (el.textContent = summary()));
+    $$("[data-baby-only]").forEach((el) => (el.hidden = S.babies === 0));
     renderStepbars();
     if (view === "home") renderHousehold();
     if (view === "baby") renderFeeds();
@@ -588,6 +650,10 @@
     const body = new URLSearchParams({ email_address: email });
     // Which ad the visitor came from (Kit custom fields utm_source, utm_campaign, utm_content).
     Object.entries(UTM).forEach(([k, v]) => body.append(`fields[${k}]`, v));
+    // So we can email each family their own list, and the feeding guide only to families with a baby
+    // (babies under 1; breastfeeding and pumping are only asked for them).
+    body.append("fields[has_baby]", S.babies > 0 ? "yes" : "no");
+    body.append("fields[kit_link]", kitLink());
     const res = await fetch(CFG.kit.endpoint.replace("{formId}", encodeURIComponent(id)), {
       method: "POST",
       headers: { Accept: "application/json" },
