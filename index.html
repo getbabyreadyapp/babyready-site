@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BabyReady: free 3-day emergency kit builder</title>
-<meta name="description" content="Answer 3 quick questions and get a 3-day emergency kit list with amounts, made for your household and your baby.">
+<meta name="description" content="Answer a couple of quick questions and get a 3-day emergency kit list with amounts, made for your household and your baby.">
 <meta name="theme-color" content="#1F2B47">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,15 +31,9 @@
     <div class="stack-12" style="margin-top: 14px">
       <span class="pill">Free · 2 minutes · No app needed</span>
       <h1 class="h1">Build your family's 3‑day emergency kit</h1>
-      <p class="lede">Answer 3 quick questions. Get a list with amounts, made for your household and your baby.</p>
+      <p class="lede">Answer a couple of quick questions. Get a list with amounts, made for your household and your baby.</p>
     </div>
-    <form id="zip-form" class="card" novalidate>
-      <label for="zip" class="label">Your ZIP code</label>
-      <input id="zip" class="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" aria-describedby="zip-hint">
-      <span id="zip-hint" class="hint">US only for now.</span>
-      <span id="zip-error" class="error-text" role="alert" hidden>Enter a 5-digit US ZIP code.</span>
-    </form>
-    <button type="submit" form="zip-form" class="btn">Build my kit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button type="button" class="btn" data-next>Build my kit <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="check-list">
       <div class="check-row"><span class="check-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Amounts, not just items.</b> Gallons, diapers, formula.</span></div>
       <div class="check-row"><span class="check-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Made for how your baby eats.</b> Breast milk, formula or solids.</span></div>

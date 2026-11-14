@@ -78,13 +78,7 @@ button, input, select { font: inherit; color: inherit; }
 .card.dark .title { font-family: var(--display); font-weight: 700; font-size: 24px; }
 .card.dark .sub { font-size: 14px; color: #C9D3E3; }
 
-/* ZIP */
 .label { font-size: 15px; font-weight: 700; }
-.zip {
-  height: 64px; border: 2px solid var(--navy); border-radius: 14px; background: #fff;
-  font-family: var(--display); font-weight: 600; font-size: 32px; letter-spacing: 0.3em;
-  text-align: center; padding: 0 0 0 0.3em; width: 100%;
-}
 .hint { font-size: 13px; color: var(--ink-3); }
 .error-text { font-size: 14px; color: var(--err-ink); font-weight: 600; }
 

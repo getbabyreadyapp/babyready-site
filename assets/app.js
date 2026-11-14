@@ -13,7 +13,6 @@
   const money = (v) => "$" + v.toFixed(2);
 
   const DEFAULTS = {
-    zip: "",
     adults: [{ sex: "f" }, { sex: "m" }], teens: [], kids: [], toddlers: [],
     babies: 1, ageMonths: 6, babyLb: "", babySize: "",
     dogs: [], cats: 0,
@@ -64,8 +63,7 @@
     return ORDER.includes(h) ? h : "start";
   }
   function show(view) {
-    // Guard the flow: no list without sign-up, no later step without a ZIP.
-    if (view !== "start" && !/^\d{5}$/.test(S.zip)) view = "start";
+    // Guard the flow: no list without sign-up.
     if (view === "baby" && S.babies === 0) view = "preview";
     if (view === "list" && !S.unlocked) view = "preview";
     if (view === "preview" && S.unlocked) view = "list";
@@ -148,7 +146,6 @@
     if (S.babies) bits.push((S.babies === 1 ? "baby" : `${S.babies} babies`) + ", " + ageLabel(S.ageMonths));
     if (S.dogs.length) bits.push(S.dogs.length === 1 ? "dog" : `${S.dogs.length} dogs`);
     if (S.cats) bits.push(S.cats === 1 ? "cat" : `${S.cats} cats`);
-    bits.push("ZIP " + S.zip);
     return bits.join(" · ");
   }
   function ageLabel(m) { return m === 0 ? "under 1 month" : m === 1 ? "1 month" : `${m} months`; }
@@ -160,7 +157,6 @@
   function render(view) {
     $$("[data-summary]").forEach((el) => (el.textContent = summary()));
     renderStepbars();
-    if (view === "start") $("#zip").value = S.zip;
     if (view === "home") renderHousehold();
     if (view === "baby") renderFeeds();
     if (view === "preview") renderPreview();
@@ -537,7 +533,6 @@
       const pouches = $("#shares [data-pouches]");
       if (pouches) pouches.textContent = pouchText(ctx());
     }
-    if (el.id === "zip") el.value = el.value.replace(/\D/g, "").slice(0, 5);
     if (el.id === "lb") {
       el.value = el.value.replace(/[^\d.]/g, "");
       S.babyLb = el.value; save();
@@ -550,16 +545,6 @@
       S[el.dataset.num] = el.value; save();
       if (el.dataset.num === "kcalPerPouch") { const p = $("#shares [data-pouches]"); if (p) p.textContent = pouchText(ctx()); }
     }
-  });
-
-  $("#zip-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const z = $("#zip").value.trim();
-    const ok = /^\d{5}$/.test(z);
-    $("#zip-error").hidden = ok;
-    $("#zip").setAttribute("aria-invalid", ok ? "false" : "true");
-    if (!ok) { $("#zip").focus(); return; }
-    S.zip = z; save(); next("start");
   });
 
   // ---------- email gate (Kit) ----------
