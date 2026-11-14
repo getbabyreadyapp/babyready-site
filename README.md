@@ -1,6 +1,6 @@
 # babyready-site
 
-The BabyReady free kit builder: a static, mobile-first site for GitHub Pages. No server; all logic runs in the browser and answers stay in the visitor's localStorage. Only the email address, plus which ad the visitor came from (utm tags), leaves the device (to Kit).
+The BabyReady free kit builder: a static, mobile-first site for GitHub Pages. No server; all logic runs in the browser and answers stay in the visitor's localStorage. When someone asks for their full list, the email address, a link holding their kit answers, whether they have a baby and which ad they came from go to Kit. Nothing goes to Meta except the pixel's PageView and Lead.
 
 | File | What it is |
 | --- | --- |
@@ -11,6 +11,9 @@ The BabyReady free kit builder: a static, mobile-first site for GitHub Pages. No
 | `assets/rules.js` | Amount formulas, food plan math and store sections for each Lite row (signed off by Josh, Nov 8 to 11, 2026) |
 | `assets/app.js` | Builder logic, Kit sign-up, print |
 | `assets/pixel.js` | Meta pixel: PageView, plus Lead after a successful sign-up. Automatic events off |
+
+## Kit link and guide
+On sign-up the site also sends Kit `has_baby` (yes if there is a baby under 1) and `kit_link`, a link with the answers (no email) packed as base64url JSON after `#k=`. Opening it rebuilds the list and goes straight to the full list. The feeding guide is at `guide/baby-feeding-in-an-emergency.pdf` for the email to link to.
 
 ## Ad tracking
 Ads link here with `?utm_source=meta&utm_campaign=test1&utm_content=ad1`. The tags are saved on arrival and sent with the Kit sign-up as custom fields `utm_source`, `utm_campaign` and `utm_content`. Kit only keeps them if those custom fields exist in the Kit account.
