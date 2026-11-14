@@ -91,12 +91,14 @@
   }
   function kitLink() { return `${location.origin}${location.pathname}?utm_source=kit#k=${packAnswers()}`; }
   // Opening a kit link: load the answers and go straight to the full list.
-  (function openKitLink() {
+  function openKitLink() {
     const m = /^#k=([A-Za-z0-9_-]+)$/.exec(location.hash);
-    if (!m) return;
+    if (!m) return false;
     try { S = unpackAnswers(m[1]); save(); history.replaceState({ view: "list" }, "", location.pathname + location.search + "#list"); }
     catch (e) { history.replaceState({}, "", location.pathname + location.search); }
-  })();
+    return true;
+  }
+  openKitLink();
 
   // ---------- ad tracking (item 40): remember which ad brought the visitor ----------
   let UTM = {};
@@ -139,6 +141,8 @@
     go(f[f.indexOf(from) + 1]);
   }
   window.addEventListener("popstate", () => show(current()));
+  // A kit link opened in a tab that already has the site (only the #k=... part changes).
+  window.addEventListener("hashchange", () => { if (openKitLink()) show(current()); });
 
   // ---------- feeding shares (items 1 and 13) ----------
   function availableFeeds() { return R.FEEDS.filter((f) => S.ageMonths >= f.minAge && (f.maxAge == null || S.ageMonths <= f.maxAge)); }
