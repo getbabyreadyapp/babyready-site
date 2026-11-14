@@ -241,7 +241,7 @@
     renderDiet();
   }
 
-  // Diet question (item 32): allergy forks, or classic swaps when no one has an allergy.
+  // Diet question (item 32): allergy forks, or everyday foods (the Food plan tab's classic swaps, item 42) when no one has an allergy.
   const ALLERGIES = [
     ["top9", "One of the 9 major allergens (milk, egg, fish, shellfish, tree nuts, peanuts, wheat, soy, sesame)"],
     ["corn", "Corn"], ["oats", "Oats"], ["seeds", "Seeds (sunflower, pumpkin)"], ["legumes", "Legumes (beans, peas)"],
@@ -261,7 +261,7 @@
         ALLERGIES.map(([k, l]) => `<label class="toggle-row"><input type="checkbox" data-allergy="${k}" ${S.allergies[k] ? "checked" : ""}> <span>${esc(l)}</span></label>`).join("");
     }
     if (S.allergy === "no") {
-      html += `<label class="toggle-row"><input type="checkbox" id="classic" ${S.classic ? "checked" : ""}> <span>Use classic swaps: peanut butter, tuna, crackers, cow's milk boxes, regular bars</span></label>`;
+      html += `<label class="toggle-row"><input type="checkbox" id="classic" ${S.classic ? "checked" : ""}> <span>No food allergies? Use everyday foods instead.<small class="hint" style="display:block">Peanut butter, tuna, crackers and the like. Usually a little cheaper.</small></span></label>`;
     }
     box.innerHTML = html;
   }
@@ -406,7 +406,7 @@
       .map((p) => `${p.who} (${p.kcal.toLocaleString()} cal) about ${money(p.perDay)}`).join(" · ");
     return `<section class="card menu-card" aria-labelledby="menu-h">
       <h2 id="menu-h">Your 3-day menu</h2>
-      <p class="fine">No cooking, no can opener needed, and none of the 9 major allergens${fp.classic ? " (classic swaps on)" : ""}. The same day 3 times keeps it simple. Amounts on the list are scaled to each person's calories.</p>
+      <p class="fine">No cooking and no can opener needed${fp.classic ? ", with everyday foods (some contain peanuts, fish, wheat or milk)" : ", and none of the 9 major allergens"}. The same day 3 times keeps it simple. Amounts on the list are scaled to each person's calories.</p>
       ${core.length ? Object.entries(meals).map(([m, foods]) => `<div class="meal"><b>${esc(m)}</b><span>${esc([...new Set(foods)].join(", "))}</span><span class="cost">${money(costMeals[m] || 0)}</span></div>`).join("") : ""}
       ${tod.length ? `<p class="fine">Toddlers get a choking-safe toddler menu (about ${tod[0].kcal === 700 ? "700 calories of food a day, plus whole milk" : "1,000 calories a day"}): cereal, applesauce, shredded chicken, mashed beans, fruit cups, oatmeal, thin seed butter on rice cakes.</p>` : ""}
       ${fp.forkNotes.map((t) => `<p class="fine">${esc(t)}</p>`).join("")}
